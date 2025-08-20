@@ -20,9 +20,15 @@ namespace TruckStore.Application.Trucks.Update
         public async Task<Truck> Handle(UpdateTruckCommand request, CancellationToken cancellationToken)
         {
             var truck = await _context.FindByIdAsync(request.Id, cancellationToken);
-            var BrandName = _brandContext.GetBrandByIdAsync(request.BrandId, cancellationToken);
-            truck.BrandName = _mapper.Map<Brand>(BrandName);
-            truck = await _context.UpdateAsync(truck, cancellationToken);
+
+            truck.Model = request.Model;
+            truck.BrandId = request.BrandId;
+            truck.maxSpeed = request.maxSpeed;
+            truck.maxLiftingCapacity = request.maxLiftingCapacity;
+            truck.Price = request.Price;
+            truck.ReleaseDate = request.ReleaseDate;
+
+            await _context.UpdateAsync(truck, cancellationToken);
 
             return truck;
         }

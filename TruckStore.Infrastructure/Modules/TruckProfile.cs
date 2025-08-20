@@ -10,8 +10,8 @@ namespace TruckStore.Infrastracture.Modules
         {
             CreateMap<TruckDto, Truck>();
             CreateMap<Truck, TruckDto>();
-            CreateMap<TruckDto, TruckDetails>();
-            CreateMap<TruckDetails, TruckDto>();
+            CreateMap<Truck, TruckDetails>();
+            CreateMap<TruckDetails, Truck>();
             CreateMap<BrandDto, Brand>();
             CreateMap<Brand, BrandDto>();
         }

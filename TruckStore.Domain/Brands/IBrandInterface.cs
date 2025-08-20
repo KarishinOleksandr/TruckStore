@@ -8,7 +8,7 @@ namespace TruckStore.Domain.Brands
 {
     public interface IBrandInterface
     {
-        Task<BrandDto?> GetBrandByIdAsync(int id, CancellationToken cancellationToken);
-        Task<List<BrandDto>> FindAllBrandAsync(CancellationToken cancellationToken);
+        Task<Brand?> GetBrandByIdAsync(int id, CancellationToken cancellationToken);
+        Task<List<Brand>> FindAllBrandAsync(CancellationToken cancellationToken);
     }
 }

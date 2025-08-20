@@ -43,7 +43,7 @@ namespace TruckStore.Infrastracture.Modules
                 await mediator.Send(new GetTruckQuery(), new CancellationToken()));
             group.MapGet("/{id}", async (int id, IMediator mediator) =>
             {
-                TruckDto? truckDto = await mediator.Send(new GetTruckByIdQuery(id), new CancellationToken());
+                Truck? truckDto = await mediator.Send(new GetTruckByIdQuery(id), new CancellationToken());
                 if (truckDto == null)
                 {
                     return Results.NotFound();

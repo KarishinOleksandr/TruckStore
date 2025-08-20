@@ -8,7 +8,7 @@ using TruckStore.Domain.Brands;
 
 namespace TruckStore.Application.Brands.Get
 {
-    public class GetBrandHandlers : IRequestHandler<GetBrandsQuery, List<BrandDto>>
+    public class GetBrandHandlers : IRequestHandler<GetBrandsQuery, List<Brand>>
     {
         private readonly IBrandInterface _context;
 
@@ -17,7 +17,7 @@ namespace TruckStore.Application.Brands.Get
             this._context = context;
         }
 
-        public async Task<List<BrandDto>> Handle(GetBrandsQuery request, CancellationToken cancellationToken)
+        public async Task<List<Brand>> Handle(GetBrandsQuery request, CancellationToken cancellationToken)
         {
             var brands = await _context.FindAllBrandAsync(cancellationToken);
             return brands.ToList();

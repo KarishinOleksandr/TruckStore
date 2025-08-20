@@ -33,8 +33,6 @@ namespace TruckStore.Application.Trucks.Create
                 Price = request.Price,
                 ReleaseDate = request.ReleaseDate
             };
-            var brandDto = await _brandContext.GetBrandByIdAsync(request.BrandId, cancellationToken);
-            truck.BrandName = _mapper.Map<Brand>(brandDto);
             truck = await _context.AddAsync(truck, cancellationToken);
 
             return truck;

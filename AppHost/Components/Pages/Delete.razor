@@ -49,13 +49,13 @@ else
     [Parameter]
     public int? id { get; set; }
 
-    public TruckDto? truck { get; set; }
+    public Truck? truck { get; set; }
 
     CultureInfo us = new CultureInfo("en-US");
 
-    List<BrandDto> brands = new List<BrandDto>();
+    List<Brand> brands = new List<Brand>();
 
-    public BrandDto brand { get; set; }
+    public Brand brand { get; set; }
 
     private string title = string.Empty;
 

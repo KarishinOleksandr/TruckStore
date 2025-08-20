@@ -36,11 +36,10 @@ namespace TruckStore.Infrastructure.Repository
             }
         }
 
-        public async Task<List<BrandDto>> FindAllBrandAsync(CancellationToken cancellationToken)
+        public async Task<List<Brand>> FindAllBrandAsync(CancellationToken cancellationToken)
         {
             var brands = await _context.Brands.ToListAsync(cancellationToken);
-            var brandsDto = _mapper.Map<List<BrandDto>>(brands);
-            return brandsDto;
+            return brands;
         }
 
         public async Task<List<Truck>> FindAllTruckAsync(CancellationToken cancellationToken)
@@ -55,11 +54,10 @@ namespace TruckStore.Infrastructure.Repository
             return truck;
         }
 
-        public async Task<BrandDto?> GetBrandByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<Brand?> GetBrandByIdAsync(int id, CancellationToken cancellationToken)
         {
             var brand = await _context.Brands.FindAsync(id, cancellationToken);
-            var brandDto = _mapper.Map<BrandDto>(brand);
-            return brandDto;
+            return brand;
         }
 
         public async Task<Truck> UpdateAsync(Truck truck, CancellationToken cancellationToken)

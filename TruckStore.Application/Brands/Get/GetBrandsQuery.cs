@@ -8,5 +8,5 @@ using TruckStore.Domain.Brands;
 
 namespace TruckStore.Application.Brands.Get
 {
-    public class GetBrandsQuery : IRequest<List<BrandDto>>;
+    public class GetBrandsQuery : IRequest<List<Brand>>;
 }
