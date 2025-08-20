@@ -1,0 +1,131 @@
+﻿@page "/add"
+@page "/add/{id:int}"
+@using TruckStore.Application.Trucks.Create
+@using TruckStore.Application.Trucks.GetbyId
+@using TruckStore.Application.Trucks.Update
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject IMediator Mediator
+@inject IMapper mapper
+
+<PageTitle>@title</PageTitle>
+<h3>@title</h3>
+
+@if (truck == null || brandlist == null)
+{
+    <h3>Loading...</h3>
+}
+else{
+<div class="row">
+    <div class="col-md-6"> 
+        <EditForm Model="@truck" FormName="Adding" OnValidSubmit="HandleSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="mb-3">
+                <label for="Model" class="form-label">Model: </label>
+                <InputText id="Model" @bind-Value="truck.Model" class="form-control" /> 
+                <ValidationMessage For="() => truck.Model" />
+            </div>
+            <div class="mb-3">
+                <label for="Brand" class="form-label">Brand: </label>
+                <InputSelect id="Brand" @bind-Value="truck.BrandId" class="form-select">
+                    <option value="">Select a Brand</option>
+                    @foreach(var brand in brandlist)
+                    {
+                        <option value="@brand.Id">@brand.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => truck.BrandId" />
+            </div>
+            <div class="mb-3">
+                <label for="maxSpeed" class="form-label">Max Speed: </label>
+                <InputNumber id="maxSpeed" @bind-Value="truck.maxSpeed" class="form-control" />
+                <ValidationMessage For="() => truck.maxSpeed" />
+            </div>
+            <div class="mb-3">
+                <label for="maxLiftingCapacity" class="form-label">Lifting capacity: </label>
+                <InputNumber id="maxLiftingCapacity" @bind-Value="truck.maxLiftingCapacity" class="form-control" />
+                <ValidationMessage For="() => truck.maxLiftingCapacity" />
+            </div>
+            <div class="mb-3">
+                <label for="Price" class="form-label">Price: </label>
+                <InputNumber id="Price" @bind-Value="truck.Price" class="form-control" />
+                <ValidationMessage For="() => truck.Price" />
+            </div>
+            <div class="mb-3">
+                <label for="ReleaseDate" class="form-label">Release Date: </label>
+                <InputDate id="ReleaseDate" @bind-Value="truck.ReleaseDate" class="form-control" />
+                <ValidationMessage For="() => truck.ReleaseDate" />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit changes</button>
+            <a role="button" class="btn btn-secondary" href="/">Cancel</a>
+        </EditForm>
+    </div>
+</div>
+}
+
+@code {
+    [Parameter]
+    public int? id { get; set; }
+
+    [SupplyParameterFromForm]
+    private TruckDetails? truck { get; set; }
+
+    List<BrandDto> brandlist = new List<BrandDto>();
+
+    private string title = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+
+        if(id != null)
+        {
+            var truck1 = await Mediator.Send(new GetTruckByIdQuery(id.Value));
+            truck = mapper.Map<TruckDetails>(truck1);
+            title = $"Edit {truck.Model}";
+        }
+        else
+        {
+            truck = new()
+            {
+                Model = string.Empty,
+                ReleaseDate = DateOnly.FromDateTime(DateTime.UtcNow)
+            };
+            title = "Add new Truck";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        brandlist = await Mediator.Send(new GetBrandsQuery());
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (id == null)
+        {
+            await Mediator.Send(new CreateTruckCommand(
+                truck.Model,
+                int.Parse(truck.BrandId),
+                truck.maxSpeed,
+                truck.maxLiftingCapacity,
+                truck.Price,
+                truck.ReleaseDate
+            ));
+        }
+        else
+        {
+            truck.Id = id.Value;
+            await Mediator.Send(new UpdateTruckCommand(
+                truck.Id,
+                truck.Model,
+                int.Parse(truck.BrandId),
+                truck.maxSpeed,
+                truck.maxLiftingCapacity,
+                truck.Price,
+                truck.ReleaseDate
+        ));
+        }
+        Navigation.NavigateTo("/");
+    }
+}   

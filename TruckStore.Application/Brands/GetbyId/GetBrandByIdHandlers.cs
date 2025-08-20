@@ -1,0 +1,24 @@
+﻿using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TruckStore.Domain.Brands;
+
+namespace TruckStore.Application.Brands.GetbyId
+{
+    public class GetBrandByIdHandlers : IRequestHandler<GetBrandByIdQuery, BrandDto?>
+    {
+        private readonly IBrandInterface _context;
+        public GetBrandByIdHandlers(IBrandInterface context)
+        {
+            this._context = context;
+        }
+        public async Task<BrandDto?> Handle(GetBrandByIdQuery request, CancellationToken cancellationToken)
+        {
+            var brand = await _context.GetBrandByIdAsync(request.Id, cancellationToken);
+            return brand;
+        }
+    }
+}

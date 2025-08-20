@@ -1,0 +1,82 @@
+﻿@page "/delete/{id:int}"
+@using TruckStore.Application.Trucks.Delete
+@using TruckStore.Application.Trucks.GetbyId
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject IMediator Mediator
+@inject IMapper mapper
+
+<PageTitle>@title</PageTitle>
+
+@if (truck == null || brand == null)
+{
+    <h3>Loading...</h3>
+}
+else
+{
+        <h3>Deleting @truck.Model</h3>
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Model</th>
+                <th>Brand</th>
+                <th>Max speed</th>
+                <th>Max lifting capacity</th>
+                <th class="text-center">Price</th>
+                <th>Release Date</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr class="">
+                    <td>@truck.Id</td>
+                    <td>@truck.Model</td>
+                    <td>@brand.Name</td>
+                    <td>@truck.maxSpeed</td>
+                    <td>@truck.maxLiftingCapacity</td>
+                    <td class="text-center">@truck.Price.ToString("C3", us)</td>
+                    <td>@truck.ReleaseDate</td>
+                </tr>
+        </tbody>
+    </table>
+    <h3>Are you sure you want to delete this truck from database?</h3>
+
+    <button class="btn btn-primary" @onclick="Deleting">Delete</button>
+    <a type="button" class="btn btn-secondary" href="/">Cancel</a>
+}
+
+@code {
+    [Parameter]
+    public int? id { get; set; }
+
+    public TruckDto? truck { get; set; }
+
+    CultureInfo us = new CultureInfo("en-US");
+
+    List<BrandDto> brands = new List<BrandDto>();
+
+    public BrandDto brand { get; set; }
+
+    private string title = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(id != null){
+            truck = await Mediator.Send(new GetTruckByIdQuery(id.Value));
+            title = $"Delete {truck.Model}";
+            brands = await Mediator.Send(new GetBrandsQuery());
+            brand = brands.Find(b => b.Id == truck.BrandId);
+        }
+    }
+
+    private async Task Deleting()
+    {
+        if(id != null)
+        {
+            await Mediator.Send(new DeleteTruckQuery(id.Value));
+            Navigation.NavigateTo("/");
+
+        }    
+    }
+
+}

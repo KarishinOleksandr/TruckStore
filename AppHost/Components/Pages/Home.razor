@@ -1,0 +1,72 @@
+﻿@page "/"
+@inject IMediator Mediator
+@inject IMapper mapper
+
+<PageTitle>Trucks</PageTitle>
+@if (trucklist.Count == 0)
+{
+    <h3>No truck are currently avaible</h3>
+}
+else if (trucklist == null)
+{
+    <h3>Loading...</h3>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Model</th>
+                <th>Brand</th>
+                <th>Max speed</th>
+                <th>Max lifting capacity</th>
+                <th class="text-center">Price</th>
+                <th>Release Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var truck in trucklist)
+            {
+                var brand = brandlist.Find(b => b.Id == truck.BrandId);
+                <tr class="">
+                    <td>@truck.Id</td>
+                    <td>@truck.Model</td>
+                    <td>@brand.Name</td>
+                    <td>@truck.maxSpeed</td>
+                    <td>@truck.maxLiftingCapacity</td>
+                    <td class="text-center">@truck.Price.ToString("C3", us)</td>
+                    <td>@truck.ReleaseDate</td>
+                    <td>
+                        <div>
+                            <a class="btn btn-primary" role="button" href="/add/@truck.Id"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-danger" role="button" href="/delete/@truck.Id"><i class="bi bi-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="mt-2">
+    <a class="btn btn-primary" role="button" href="/add">Add truck</a>
+</div>
+
+@code {
+    List<Truck> trucklist = new List<Truck>();
+
+    List<Brand> brandlist = new List<Brand>();
+
+    CultureInfo us = new CultureInfo("en-US");
+
+    protected override async Task OnInitializedAsync()
+    {
+        var brandlist1 = await Mediator.Send(new GetBrandsQuery());
+        brandlist = mapper.Map<List<Brand>>(brandlist1);
+        var trucklist1 = await Mediator.Send(new GetTruckQuery());
+        trucklist = mapper.Map<List<Truck>>(trucklist1);
+
+    }
+}
