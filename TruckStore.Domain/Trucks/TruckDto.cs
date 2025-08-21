@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace TruckStore.Domain.Trucks
 {
-    public record class TruckDto(int Id, string Model, string Brand, int BrandId, int maxSpeed, int maxLiftingCapacity, int Price, DateOnly ReleaseDate);
+    public record class TruckDto(Guid Id, string Model, string Brand, Guid BrandId, int maxSpeed, int maxLiftingCapacity, int Price, DateOnly ReleaseDate);
 }

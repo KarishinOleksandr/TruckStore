@@ -9,7 +9,7 @@ namespace TruckStore.Application.Trucks.Delete
 {
     public class DeleteTruckQuery : IRequest
     {
-        public int Id { get; set; }
-        public DeleteTruckQuery(int id) => Id = id;
+        public Guid Id { get; set; }
+        public DeleteTruckQuery(Guid id) => Id = id;
     }
 }

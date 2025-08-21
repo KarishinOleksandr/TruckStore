@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace TruckStore.Domain.Brands
 {
-    public record class BrandDto(int Id, string Name);
+    public record class BrandDto(Guid Id, string Name);
 }

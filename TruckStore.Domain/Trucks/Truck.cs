@@ -9,7 +9,7 @@ namespace TruckStore.Domain.Trucks
 {
     public class Truck
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public required string Model { get; set; }
 
@@ -21,7 +21,7 @@ namespace TruckStore.Domain.Trucks
 
         public DateOnly ReleaseDate { get; set; }
 
-        public int BrandId { get; set; }
+        public Guid BrandId { get; set; }
 
         public Brand? BrandName { get; set; }
     }

@@ -5,14 +5,14 @@ namespace TruckStore.Domain.Trucks
 {
     public class TruckDetails
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(50)]
         public required string Model { get; set; }
 
         [Required(ErrorMessage = "Brand's name is required")]
-        public string? BrandId { get; set; }
+        public Guid? BrandId { get; set; }
         public string Brand { get; set; } = string.Empty;
 
         [Required]

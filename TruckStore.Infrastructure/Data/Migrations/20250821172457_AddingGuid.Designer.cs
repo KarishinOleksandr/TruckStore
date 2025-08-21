@@ -12,8 +12,8 @@ using TruckStore.Infrastructure.Data;
 namespace TruckStore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(TruckStoreContext))]
-    [Migration("20250820213927_init")]
-    partial class init
+    [Migration("20250821172457_AddingGuid")]
+    partial class AddingGuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,9 @@ namespace TruckStore.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("TruckStore.Domain.Brands.Brand", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -44,41 +42,39 @@ namespace TruckStore.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Name = "Mercedes"
-                        },
-                        new
-                        {
-                            Id = 2,
+                            Id = new Guid("1252b355-e2ab-4009-a1a2-7113c2589975"),
                             Name = "Volvo"
                         },
                         new
                         {
-                            Id = 3,
-                            Name = "Renault"
+                            Id = new Guid("3fb7a059-648e-4d96-a1ac-f76ab65d9c8d"),
+                            Name = "Mercedes"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("75f9efb7-07fb-4a66-a0d5-e2bb026c54e7"),
+                            Name = "Iveco"
+                        },
+                        new
+                        {
+                            Id = new Guid("e89cde87-f6e4-4c1b-88e2-5827a9941867"),
                             Name = "Scania"
                         },
                         new
                         {
-                            Id = 5,
-                            Name = "Iveco"
+                            Id = new Guid("0310acb8-e043-4950-9626-5f27c2c897db"),
+                            Name = "Renault"
                         });
                 });
 
             modelBuilder.Entity("TruckStore.Domain.Trucks.Truck", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BrandId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BrandId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Model")
                         .IsRequired()

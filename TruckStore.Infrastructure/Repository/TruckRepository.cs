@@ -48,13 +48,13 @@ namespace TruckStore.Infrastructure.Repository
             return trucks;
         }
 
-        public async Task<Truck?> FindByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<Truck?> FindByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var truck = await _context.Trucks.FindAsync(id, cancellationToken);
             return truck;
         }
 
-        public async Task<Brand?> GetBrandByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<Brand?> GetBrandByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var brand = await _context.Brands.FindAsync(id, cancellationToken);
             return brand;

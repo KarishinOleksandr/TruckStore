@@ -10,7 +10,7 @@ namespace TruckStore.Application.Brands.GetbyId
 {
     public class GetBrandByIdQuery : IRequest<Brand?>
     {
-        public int Id { get; set; }
-        public GetBrandByIdQuery(int id)=> Id = id;
+        public Guid Id { get; set; }
+        public GetBrandByIdQuery(Guid id)=> Id = id;
     }
 }

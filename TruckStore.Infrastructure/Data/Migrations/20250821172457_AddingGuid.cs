@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TruckStore.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class AddingGuid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +17,7 @@ namespace TruckStore.Infrastructure.Data.Migrations
                 name: "Brands",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -30,14 +29,13 @@ namespace TruckStore.Infrastructure.Data.Migrations
                 name: "Trucks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     maxSpeed = table.Column<int>(type: "int", nullable: false),
                     maxLiftingCapacity = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     ReleaseDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    BrandId = table.Column<int>(type: "int", nullable: false)
+                    BrandId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,11 +53,11 @@ namespace TruckStore.Infrastructure.Data.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Mercedes" },
-                    { 2, "Volvo" },
-                    { 3, "Renault" },
-                    { 4, "Scania" },
-                    { 5, "Iveco" }
+                    { new Guid("0310acb8-e043-4950-9626-5f27c2c897db"), "Renault" },
+                    { new Guid("1252b355-e2ab-4009-a1a2-7113c2589975"), "Volvo" },
+                    { new Guid("3fb7a059-648e-4d96-a1ac-f76ab65d9c8d"), "Mercedes" },
+                    { new Guid("75f9efb7-07fb-4a66-a0d5-e2bb026c54e7"), "Iveco" },
+                    { new Guid("e89cde87-f6e4-4c1b-88e2-5827a9941867"), "Scania" }
                 });
 
             migrationBuilder.CreateIndex(
