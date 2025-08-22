@@ -1,6 +1,7 @@
 ﻿@page "/"
-@inject IMediator Mediator
-@inject IMapper mapper
+@implements IDisposable
+@rendermode InteractiveServer
+@inject IServiceScopeFactory ScopeFactory
 
 <PageTitle>Trucks</PageTitle>
 @if (trucklist.Count == 0)
@@ -59,12 +60,34 @@ else
 
     CultureInfo us = new CultureInfo("en-US");
 
+    private Timer? _timer;
+
     protected override async Task OnInitializedAsync()
     {
-        var brandlist1 = await Mediator.Send(new GetBrandsQuery());
+        await LoadData();
+
+        _timer = new Timer(async _ =>
+        {
+            await InvokeAsync(LoadData);
+        }, null, 0, 1000);
+    }
+
+    public async Task LoadData()
+    {
+        using var scope = ScopeFactory.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
+
+        var brandlist1 = await mediator.Send(new GetBrandsQuery());
         brandlist = mapper.Map<List<Brand>>(brandlist1);
-        var trucklist1 = await Mediator.Send(new GetTruckQuery());
+        var trucklist1 = await mediator.Send(new GetTruckQuery());
         trucklist = mapper.Map<List<Truck>>(trucklist1);
 
+        this.StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        _timer.Dispose();
     }
 }
