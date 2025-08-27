@@ -1,7 +1,12 @@
 ﻿@page "/"
-@implements IDisposable
+@using TruckStore.Application.Cart.Create
+@using TruckStore.Domain.Cart
+@using TruckStore.Infrastructure.Repository
 @rendermode InteractiveServer
 @inject IServiceScopeFactory ScopeFactory
+@inject IMapper Mapper
+@inject IMediator Mediator
+@inject NavigationManager navigationManager
 
 <PageTitle>Trucks</PageTitle>
 @if (trucklist.Count == 0)
@@ -39,6 +44,7 @@ else
                     <td>@truck.ReleaseDate</td>
                     <td>
                         <div>
+                            <button class="btn btn-success" @onclick="() => AddToCart(truck)"><i class="bi bi-plus-square"></i></button>
                             <a class="btn btn-primary" role="button" href="/add/@truck.Id"><i class="bi bi-pencil-square"></i></a>
                             <a class="btn btn-danger" role="button" href="/delete/@truck.Id"><i class="bi bi-trash"></i></a>
                         </div>
@@ -60,16 +66,33 @@ else
 
     CultureInfo us = new CultureInfo("en-US");
 
-    private Timer? _timer;
+    private HubConnection? hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        hubConnection = new HubConnectionBuilder()
+       .WithUrl(navigationManager.ToAbsoluteUri("/truckHub"))
+       .WithAutomaticReconnect()
+       .Build();
 
-        _timer = new Timer(async _ =>
+        hubConnection.On("TrucksUpdated", async () =>
         {
-            await InvokeAsync(LoadData);
-        }, null, 0, 1000);
+            await LoadData();
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
+        await LoadData();
+    }
+
+    public async Task AddToCart(Truck truck)
+    {
+        await Mediator.Send(new CreateBuyItemCommand(
+            ItemId: Guid.NewGuid(),
+            Quantity: 1,
+            TruckId: truck.Id
+    ));
     }
 
     public async Task LoadData()
@@ -84,10 +107,5 @@ else
         trucklist = mapper.Map<List<Truck>>(trucklist1);
 
         this.StateHasChanged();
-    }
-
-    public void Dispose()
-    {
-        _timer.Dispose();
     }
 }

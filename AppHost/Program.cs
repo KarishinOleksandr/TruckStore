@@ -1,4 +1,5 @@
 using AppHost.Components;
+using AppHost.Extensions;
 using AutoMapper;
 using TruckStore.Infrastracture;
 using TruckStore.Infrastracture.Modules;
@@ -36,6 +37,9 @@ namespace AppHost
             var mapper = app.Services.GetRequiredService<IMapper>();
 
             app.UseHttpsRedirection();
+
+            app.UseCookiePolicy();
+            app.UserCartContext();
 
             app.UseStaticFiles();
             app.UseAntiforgery();

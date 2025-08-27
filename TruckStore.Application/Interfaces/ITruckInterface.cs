@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TruckStore.Domain.Brands;
+using TruckStore.Domain.Trucks;
 
-namespace TruckStore.Domain.Trucks
+namespace TruckStore.Application.Interfaces
 {
     public interface ITruckInterface
     {

@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using MediatR;
-using TruckStore.Domain.Brands;
+﻿using MediatR;
+using Microsoft.AspNetCore.SignalR;
+using TruckStore.Application.Interfaces;
 using TruckStore.Domain.Trucks;
 
 namespace TruckStore.Application.Trucks.Update
@@ -8,14 +8,12 @@ namespace TruckStore.Application.Trucks.Update
     public class UpdateTruckHandler : IRequestHandler<UpdateTruckCommand, Truck>
     {
         private readonly ITruckInterface _context;
-        private readonly IBrandInterface _brandContext;
-        private readonly IMapper _mapper;
+        private readonly IHubContext<TruckHub> _hubContext;
 
-        public UpdateTruckHandler(ITruckInterface context, IBrandInterface brandContext, IMapper mapper)
+        public UpdateTruckHandler(ITruckInterface context, IHubContext<TruckHub> _hubContext)
         {
             this._context = context;
-            this._brandContext = brandContext;
-            this._mapper = mapper;
+            this._hubContext = _hubContext;
         }
         public async Task<Truck> Handle(UpdateTruckCommand request, CancellationToken cancellationToken)
         {
@@ -29,7 +27,7 @@ namespace TruckStore.Application.Trucks.Update
             truck.ReleaseDate = request.ReleaseDate;
 
             await _context.UpdateAsync(truck, cancellationToken);
-
+            await _hubContext.Clients.All.SendAsync("TrucksUpdatet");
             return truck;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using TruckStore.Application.Interfaces;
 using TruckStore.Domain.Trucks;
 
 namespace TruckStore.Application.Trucks.GetbyId

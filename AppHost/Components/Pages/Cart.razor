@@ -1,0 +1,48 @@
+﻿@page "/cart"
+@using TruckStore.Application.Cart.GetAll
+@using TruckStore.Domain.Cart
+@using TruckStore.Infrastructure.Repository
+@inject IMediator _mediator
+
+<h3>Your Cart</h3>
+
+@if (cartList == null)
+{
+    <p>Loading...</p>
+}
+else if (!cartList.Any())
+{
+    <p>Cart is empry.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Quantity</th>
+                <th>Date of create</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in cartList)
+            {
+                <tr>
+                    <td>@item.Truck?.Model</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.CreatedDate.ToLocalTime().ToString("g")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private List<CartItem> cartList = new List<CartItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        cartList = await _mediator.Send(new GetAllCartItemQuery());
+    }
+}

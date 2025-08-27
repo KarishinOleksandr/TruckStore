@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TruckStore.Application.Interfaces;
 using TruckStore.Domain.Brands;
 using TruckStore.Domain.Trucks;
 
@@ -13,13 +15,11 @@ namespace TruckStore.Application.Trucks.Create
     public class CreateTruckHandler : IRequestHandler<CreateTruckCommand, Truck>
     {
         private readonly ITruckInterface _context;
-        private readonly IBrandInterface _brandContext;
-        private readonly IMapper _mapper;
-        public CreateTruckHandler(ITruckInterface context, IMapper mapper, IMediator mediator, IBrandInterface brandcontext)
+        private readonly IHubContext<TruckHub> _hubContext;
+        public CreateTruckHandler(ITruckInterface context, IHubContext<TruckHub> hubContext)
         {
             this._context = context;
-            this._brandContext = brandcontext;
-            this._mapper = mapper;
+            this._hubContext = hubContext;
         }
 
         public async Task<Truck> Handle(CreateTruckCommand request, CancellationToken cancellationToken)
@@ -34,6 +34,7 @@ namespace TruckStore.Application.Trucks.Create
                 ReleaseDate = request.ReleaseDate
             };
             truck = await _context.AddAsync(truck, cancellationToken);
+            await _hubContext.Clients.All.SendAsync("TrucksUpdatet");
 
             return truck;
         }

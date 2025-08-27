@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TruckStore.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TruckStore.Infrastructure.Data;
 namespace TruckStore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(TruckStoreContext))]
-    partial class TruckStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250826214439_cartfunc")]
+    partial class cartfunc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

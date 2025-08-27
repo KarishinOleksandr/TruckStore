@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
+using TruckStore.Application.Interfaces;
 using TruckStore.Domain.Trucks;
 
 namespace TruckStore.Application.Trucks.Get
@@ -7,17 +9,14 @@ namespace TruckStore.Application.Trucks.Get
     public class GetTruckHandler : IRequestHandler<GetTruckQuery, List<Truck>>
     {
         private readonly ITruckInterface _context;
-        private readonly IMapper _mapper;
-        public GetTruckHandler(ITruckInterface context, IMapper mapper)
+        public GetTruckHandler(ITruckInterface context)
         {
             this._context = context;
-            this._mapper = mapper;
         }
 
         public async Task<List<Truck>> Handle(GetTruckQuery request, CancellationToken cancellationToken)
         {
             var trucks = await _context.FindAllTruckAsync(cancellationToken);
-
             return trucks.ToList();
         }
     }
