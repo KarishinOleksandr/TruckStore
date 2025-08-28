@@ -70,20 +70,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        hubConnection = new HubConnectionBuilder()
-       .WithUrl(navigationManager.ToAbsoluteUri("/truckHub"))
-       .WithAutomaticReconnect()
-       .Build();
+        await LoadData();
 
-        hubConnection.On("TrucksUpdated", async () =>
-        {
-            await LoadData();
-            StateHasChanged();
-        });
+        hubConnection = new HubConnectionBuilder().WithUrl(navigationManager.ToAbsoluteUri("/truckHub")).WithAutomaticReconnect().Build();
+        hubConnection.On<TruckChangedMessage>("ReceiveTruckChange", onTruckChanged);
 
         await hubConnection.StartAsync();
-
-        await LoadData();
     }
 
     public async Task AddToCart(Truck truck)
@@ -107,5 +99,44 @@ else
         trucklist = mapper.Map<List<Truck>>(trucklist1);
 
         this.StateHasChanged();
+    }
+
+    private void onTruckChanged(TruckChangedMessage message)
+    {
+        if (trucklist == null) return;
+
+        switch (message.Kind)
+        {
+            case KindOfChanges.Created:
+                if (!trucklist.Any(t => t.Id == message.id) && message.Data != null)
+                {
+                    var truck = Mapper.Map<Truck>(message.Data);
+                    trucklist.Add(truck);
+                }
+                break;
+
+            case KindOfChanges.Updated:
+                var i = trucklist.FindIndex(t => t.Id == message.id);
+                if (message != null)
+                {
+                    var truck = Mapper.Map<Truck>(message.Data);
+                    trucklist[i] = truck;
+                }
+                break;
+
+            case KindOfChanges.Deleted:
+                trucklist.RemoveAll(t => t.Id == message.id);
+                break;
+        }
+
+        InvokeAsync(StateHasChanged);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if(hubConnection != null)
+        {
+            await hubConnection.DisposeAsync();
+        }
     }
 }

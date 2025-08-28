@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using TruckStore.Application.Interfaces;
+using TruckStore.Application.SignalR;
 using TruckStore.Domain.Trucks;
 
 namespace TruckStore.Application.Trucks.Update
@@ -8,12 +9,12 @@ namespace TruckStore.Application.Trucks.Update
     public class UpdateTruckHandler : IRequestHandler<UpdateTruckCommand, Truck>
     {
         private readonly ITruckInterface _context;
-        private readonly IHubContext<TruckHub> _hubContext;
+        private readonly IMediator _mediator;
 
-        public UpdateTruckHandler(ITruckInterface context, IHubContext<TruckHub> _hubContext)
+        public UpdateTruckHandler(ITruckInterface context, IMediator mediator)
         {
             this._context = context;
-            this._hubContext = _hubContext;
+            this._mediator = mediator;
         }
         public async Task<Truck> Handle(UpdateTruckCommand request, CancellationToken cancellationToken)
         {
@@ -27,7 +28,9 @@ namespace TruckStore.Application.Trucks.Update
             truck.ReleaseDate = request.ReleaseDate;
 
             await _context.UpdateAsync(truck, cancellationToken);
-            await _hubContext.Clients.All.SendAsync("TrucksUpdatet");
+
+            var dto = new TruckDto(truck.Id, truck.Model, truck.BrandId, truck.maxSpeed, truck.maxLiftingCapacity, truck.Price, truck.ReleaseDate);
+            await _mediator.Publish(new ChangedNotification(dto, KindOfChanges.Updated), cancellationToken);
             return truck;
         }
     }

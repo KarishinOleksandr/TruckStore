@@ -1,11 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TruckStore.Application.Interfaces;
+using TruckStore.Application.SignalR;
 using TruckStore.Domain.Trucks;
 
 namespace TruckStore.Application.Trucks.Delete
@@ -13,19 +8,21 @@ namespace TruckStore.Application.Trucks.Delete
     public class DeleteTruckHandler : IRequestHandler<DeleteTruckQuery>
     {
         private readonly ITruckInterface _context;
-        private readonly IHubContext<TruckHub> _hubContext;
+        private readonly IMediator _mediator;
 
-        public DeleteTruckHandler(ITruckInterface context, IHubContext<TruckHub> hubContext)
+        public DeleteTruckHandler(ITruckInterface context, IMediator mediator)
         {
             this._context = context;
-            this._hubContext = hubContext;
+            this._mediator = mediator;
         }
 
         public async Task Handle(DeleteTruckQuery request, CancellationToken cancellationToken)
         {
             var truck = await _context.FindByIdAsync(request.Id, cancellationToken);
             await _context.DeleteAsync(truck, cancellationToken);
-            await _hubContext.Clients.All.SendAsync("TrucksUpdatet");
-        }
+
+            var dto = new TruckDto(truck.Id, truck.Model, truck.BrandId, truck.maxSpeed, truck.maxLiftingCapacity, truck.Price, truck.ReleaseDate);
+            await _mediator.Publish(new ChangedNotification(dto, KindOfChanges.Deleted), cancellationToken);
+        } 
     }
 }

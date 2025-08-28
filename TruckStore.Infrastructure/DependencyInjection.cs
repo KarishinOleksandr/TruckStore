@@ -25,7 +25,6 @@ namespace TruckStore.Infrastracture
             services.AddScoped<ICartIdProvider, CartIdProvider>();
             services.AddScoped<ICartIdProvider, CartIdProvider>();
             services.AddScoped<ICartContext, CartContext>();
-            services.AddSignalR();
             return services;
         }
     }

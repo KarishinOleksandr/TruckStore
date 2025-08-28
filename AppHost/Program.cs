@@ -4,6 +4,7 @@ using AutoMapper;
 using TruckStore.Infrastracture;
 using TruckStore.Infrastracture.Modules;
 using TruckStore.Infrastructure.Data;
+using TruckStore.Infrastructure.Hubs;
 
 namespace AppHost
 {
@@ -15,6 +16,8 @@ namespace AppHost
 
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddEndpointsApiExplorer();
 
@@ -43,6 +46,8 @@ namespace AppHost
 
             app.UseStaticFiles();
             app.UseAntiforgery();
+
+            app.MapHub<TruckHub>("/truckHub");
 
             app.MapTruckEndpoint();
             app.MapBrandEndpoint(mapper);

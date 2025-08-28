@@ -1,13 +1,6 @@
-﻿using AutoMapper;
-using MediatR;
-using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
 using TruckStore.Application.Interfaces;
-using TruckStore.Domain.Brands;
+using TruckStore.Application.SignalR;
 using TruckStore.Domain.Trucks;
 
 namespace TruckStore.Application.Trucks.Create
@@ -15,11 +8,11 @@ namespace TruckStore.Application.Trucks.Create
     public class CreateTruckHandler : IRequestHandler<CreateTruckCommand, Truck>
     {
         private readonly ITruckInterface _context;
-        private readonly IHubContext<TruckHub> _hubContext;
-        public CreateTruckHandler(ITruckInterface context, IHubContext<TruckHub> hubContext)
+        private readonly IMediator _mediator;
+        public CreateTruckHandler(ITruckInterface context, IMediator mediator)
         {
             this._context = context;
-            this._hubContext = hubContext;
+            this._mediator = mediator;
         }
 
         public async Task<Truck> Handle(CreateTruckCommand request, CancellationToken cancellationToken)
@@ -34,7 +27,9 @@ namespace TruckStore.Application.Trucks.Create
                 ReleaseDate = request.ReleaseDate
             };
             truck = await _context.AddAsync(truck, cancellationToken);
-            await _hubContext.Clients.All.SendAsync("TrucksUpdatet");
+
+            var dto = new TruckDto(truck.Id, truck.Model, truck.BrandId, truck.maxSpeed, truck.maxLiftingCapacity, truck.Price, truck.ReleaseDate);
+            await _mediator.Publish(new ChangedNotification(dto, KindOfChanges.Created), cancellationToken);
 
             return truck;
         }
