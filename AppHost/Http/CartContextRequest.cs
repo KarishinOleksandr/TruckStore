@@ -25,7 +25,7 @@ namespace AppHost.Http
                     HttpOnly = true,
                     SameSite = SameSiteMode.Lax,
                     Secure = true,
-                    Expires = DateTimeOffset.UtcNow
+                    Expires = DateTimeOffset.UtcNow.AddHours(1)
                 });
             }
             cartContext.CartId = cartId;

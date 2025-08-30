@@ -1,0 +1,66 @@
+﻿@page "/checkout"
+@rendermode InteractiveServer
+@inject IMediator mediator
+@inject NavigationManager Navigation
+
+<PageTitle>Checkout proceed</PageTitle>
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="@order" FormName="Checkout" OnValidSubmit="Submit">
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label for="Name" class="form-label">Name: </label>
+                <InputText id="Name" @bind-Value="order.Name" class="form-control" />
+                <ValidationMessage For="() => order.Name" />
+            </div>
+            <div class="mb-3">
+                <label for="SecondName" class="form-label">SecondName: </label>
+                <InputText id="SecondName" @bind-Value="order.SecondName" class="form-control" />
+                <ValidationMessage For="() => order.SecondName" />
+            </div>
+            <div class="mb-3">
+                <label for="Adress" class="form-label">Your adress: </label>
+                <InputText id="Adress" @bind-Value="order.Adress" class="form-control" />
+                <ValidationMessage For="() => order.Adress" />
+            </div>
+            <div class="mb-3">
+                <label for="PhoneNumber" class="form-label">Your phone number: </label>
+                <InputText id="PhoneNumber" @bind-Value="order.PhoneNumber" class="form-control" />
+                <ValidationMessage For="() => order.PhoneNumber" />
+            </div>
+            <div class="mb-3">
+                <label for="EmailAdress" class="form-label">Your email adress: </label>
+                <InputText id="EmailAdress" @bind-Value="order.EmailAdress" class="form-control" />
+                <ValidationMessage For="() => order.EmailAdress" />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit order</button>
+            <a role="button" class="btn btn-secondary" href="/cart">Back to cart</a>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Order? order { get; set; }
+
+    public bool Form = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        order = new();
+    }
+
+    private async Task Submit()
+    {
+        await mediator.Send(new CreateOrderCommand(
+            order.Name,
+            order.SecondName,
+            order.Adress,
+            order.PhoneNumber,
+            order.EmailAdress,
+            order.OrderTime
+        ));
+        Navigation.NavigateTo("/");
+    }
+}

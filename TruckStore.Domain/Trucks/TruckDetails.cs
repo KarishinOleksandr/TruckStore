@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace TruckStore.Domain.Trucks
 {
@@ -13,7 +12,6 @@ namespace TruckStore.Domain.Trucks
 
         [Required(ErrorMessage = "Brand's name is required")]
         public Guid? BrandId { get; set; }
-        public string Brand { get; set; } = string.Empty;
 
         [Required]
         [Range(60, 180)]

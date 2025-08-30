@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TruckStore.Domain.Brands;
-using TruckStore.Domain.Trucks;
+﻿using TruckStore.Domain.Trucks;
 
 namespace TruckStore.Application.Interfaces
 {

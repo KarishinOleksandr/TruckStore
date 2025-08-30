@@ -10,6 +10,7 @@ namespace TruckStore.Infrastructure.Data
         {
             var scopre = app.Services.CreateScope();
             var dbContext = scopre.ServiceProvider.GetRequiredService<TruckStoreContext>();
+            await dbContext.Database.MigrateAsync();
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using TruckStore.Application.Interfaces;
 using TruckStore.Domain.Brands;
 using TruckStore.Domain.Trucks;
@@ -15,11 +9,9 @@ namespace TruckStore.Infrastructure.Repository
     public class TruckRepository : ITruckInterface, IBrandInterface
     {
         private readonly TruckStoreContext _context;
-        private readonly IMapper _mapper;
-        public TruckRepository(TruckStoreContext context, IMapper mapper)
+        public TruckRepository(TruckStoreContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
         public async Task<Truck> AddAsync(Truck truck, CancellationToken cancellationToken)
         {

@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TruckStore.Application.Interfaces;
 using TruckStore.Domain.Cart;
-using TruckStore.Domain.Trucks;
 using TruckStore.Infrastructure.Data;
 
 namespace TruckStore.Infrastructure.Repository

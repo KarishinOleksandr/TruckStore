@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
-using Microsoft.AspNetCore.SignalR;
+﻿using MediatR;
 using TruckStore.Application.Interfaces;
 using TruckStore.Domain.Trucks;
 

@@ -1,13 +1,7 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TruckStore.Application.Cart.GetById;
 using TruckStore.Application.Interfaces;
 using TruckStore.Domain.Cart;
-using TruckStore.Domain.Trucks;
 
 namespace TruckStore.Application.Cart.Create
 {

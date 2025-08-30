@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.SignalR;
 using TruckStore.Application.Interfaces;
 using TruckStore.Application.SignalR;
 using TruckStore.Domain.Trucks;
