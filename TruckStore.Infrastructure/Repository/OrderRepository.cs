@@ -23,7 +23,7 @@ namespace TruckStore.Infrastructure.Repository
                 {
                     TruckId = item.Truck.Id,
                     OrderId = order.Id,
-                    Price = item.Truck.Price
+                    Price = item.Truck.Price * item.Quantity,
                 };
 
                 await _context.OrderDetails.AddAsync(detail);
