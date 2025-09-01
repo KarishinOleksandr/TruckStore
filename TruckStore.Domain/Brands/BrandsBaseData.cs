@@ -11,8 +11,8 @@ namespace TruckStore.Domain.Brands
 
         public static List<Brand> BrandsData = new List<Brand> 
         {
-            new Brand { Id = VolvoId, Name = "Volvo" },
-            new Brand { Id= MercedesId, Name = "Mercedes" },
+            new Brand {Id = VolvoId, Name = "Volvo" },
+            new Brand {Id= MercedesId, Name = "Mercedes" },
             new Brand {Id = IvecoId, Name = "Iveco"},
             new Brand {Id = ScaniaId, Name = "Scania"},
             new Brand {Id = RenaultId, Name = "Renault"},
