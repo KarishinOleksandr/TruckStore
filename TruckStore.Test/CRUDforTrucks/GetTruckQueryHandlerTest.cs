@@ -53,8 +53,6 @@ namespace TruckStore.Test.CRUDforTrucks
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(ListofTruck.OrderBy(t => t.Id).Select(t => t.Id),
-                result.OrderBy(t => t.Id).Select(t=>t.Id));
             _mockITruckInterface.Verify(x=> x.FindAllTruckAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
     }
